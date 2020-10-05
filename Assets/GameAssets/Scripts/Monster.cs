@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    public Color Color { get; set; }
+    public void SetTransform(Transform parent, Vector3 position, Vector3 scale)
+    {
+        transform.SetParent(parent);
+        transform.localPosition = position;
+        transform.localScale = scale;
+    }
 }

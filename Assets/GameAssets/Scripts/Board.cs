@@ -7,52 +7,36 @@ public class Board : MonoBehaviour
 {
     #region Serializable Fields
     [SerializeField]
-    private int _width;
-    [SerializeField]
-    private int _height;
-    [SerializeField]
-    private int _columnsNumber;
-    [SerializeField]
-    private int _rowsNumber;
-    [SerializeField]
     private GameObject _tilePrefab;
     [SerializeField]
-    private int _numberOfMonsters;
+    private Level _level;
     #endregion
 
     #region Private Fields
     private BoardTile[,] tiles;
     #endregion
 
-    #region Unity Methods
-    private void Start()
+    public void Init()
     {
-        Init();
-    }
-    #endregion
-
-    #region Private Methods
-    private void Init()
-    {
-        tiles = new BoardTile[_rowsNumber, _columnsNumber];
+        tiles = new BoardTile[_level.rowsNumber, _level.columnsNumber];
         GenerateMonsters();
     }
     private void GenerateMonsters()
     {
-        Vector2 size = new Vector2((float)_width / _columnsNumber, (float)_height / _rowsNumber);
+        Vector2 size = new Vector2((float)_level.width / _level.columnsNumber, (float)_level.height / _level.rowsNumber);
         Vector3 offset = Vector3.zero;
-        offset.x = -Mathf.Ceil((_columnsNumber / 2.0f) * size.x) + Mathf.Ceil((size.x * 0.5f) / _columnsNumber);
-        offset.y = -Mathf.Ceil((_rowsNumber / 2.0f) * size.y) + Mathf.Ceil((size.y * 0.5f) / _rowsNumber);
+        offset.x = -Mathf.Ceil((_level.columnsNumber / 2.0f) * size.x) + Mathf.Ceil((size.x * 0.5f) / _level.columnsNumber);
+        offset.y = -Mathf.Ceil((_level.rowsNumber / 2.0f) * size.y) + Mathf.Ceil((size.y * 0.5f) / _level.rowsNumber);
         float startX = offset.x;
         float deltay = size.y, deltax = size.x;
 
-        for (int i = 0; i < _rowsNumber; i++)
+        for (int i = 0; i < _level.rowsNumber; i++)
         {
-            for (int j = 0; j < _columnsNumber; j++)
+            for (int j = 0; j < _level.columnsNumber; j++)
             {
                 BoardTile tile = Instantiate(_tilePrefab, new Vector3(i * size.x, j * size.y, 0), Quaternion.identity).GetComponent<BoardTile>();
                 tile.SetTransform(transform, size, offset);
-                tile.Init(_numberOfMonsters);
+                tile.Init(_level.GetRandomMonster(), i.ToString() + j.ToString());
                 tiles[i, j] = tile;
                 offset.x += deltax;
             }
@@ -60,5 +44,4 @@ public class Board : MonoBehaviour
             offset.x = startX;
         }
     }
-    #endregion
 }

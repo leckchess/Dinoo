@@ -5,22 +5,20 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class BoardTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler,IPointerDownHandler
+public class BoardTile : MonoBehaviour
 {
-    private MonstersManager _monstersManager;
-    private UnityEvent _onSelect = new UnityEvent();
-    private UnityEvent _onDeselect = new UnityEvent();
+    public string id { get; private set; }
+    public Monster monster;
     public bool IsChicked { get; set; }
-
-    internal void Init(int numberOfMonsters)
+    public UnityAction<BoardTile> onMouseDown;
+    public UnityAction<BoardTile> onMouseUp;
+    public UnityAction<BoardTile> onMouseEnter;
+    public UnityAction<BoardTile> onMouseExit;
+    internal void Init(GameObject tilemonster, string tileid)
     {
-        if (_monstersManager == null)
-            _monstersManager = FindObjectOfType<MonstersManager>();
-
-        GameObject monster = Instantiate(_monstersManager.GetRandomMonster(numberOfMonsters));
-        monster.transform.parent = transform;
-        monster.transform.localPosition = Vector3.zero;
-        monster.transform.localScale = Vector3.one;
+        id = name = tileid;
+        monster = tilemonster.AddComponent<Monster>();
+        monster.SetTransform(transform, Vector3.zero, Vector3.one);
     }
 
     public void SetTransform(Transform parent, Vector3 size, Vector2 offset)
@@ -38,23 +36,20 @@ public class BoardTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         transform.position = new Vector3(offset.x, offset.y, 1);
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    private void OnMouseEnter()
     {
-        // if same color zi previous play yes else play no
+        onMouseEnter.Invoke(this);
     }
-    public void OnPointerExit(PointerEventData eventData)
+    private void OnMouseExit()
     {
-        // play sad aw 7aga kda
-        // lw prev == next yb2a clear this else add next lw same color
-    }
-    public void OnPointerDown(PointerEventData eventData)
+        onMouseEnter.Invoke(this);
+          }
+    private void OnMouseDown()
     {
-        // lw awl 7d yb2a al head
+        onMouseDown.Invoke(this);
     }
-    public void OnPointerUp(PointerEventData eventData)
+    private void OnMouseUp()
     {
-        // if there is more than 3 n destroy / n kill
+        onMouseUp.Invoke(this);
     }
-
-
 }
