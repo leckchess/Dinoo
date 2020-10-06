@@ -667,6 +667,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4148163492593646}
   - component: {fileID: 95062283931690244}
+  - component: {fileID: 178259560777231293}
   m_Layer: 0
   m_Name: Dino25
   m_TagString: Untagged
@@ -709,6 +710,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &178259560777231293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599571797810298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473989d2096972346bd38f27471024d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0.5058824, g: 0.40784317, b: 0.121568635, a: 0}
 --- !u!1 &1641197591752442
 GameObject:
   m_ObjectHideFlags: 0

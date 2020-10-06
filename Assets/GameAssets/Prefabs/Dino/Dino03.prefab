@@ -934,6 +934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4758293275774348}
   - component: {fileID: 95692276102605838}
+  - component: {fileID: -1702811223472607483}
   m_Layer: 0
   m_Name: Dino03
   m_TagString: Untagged
@@ -976,6 +977,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-1702811223472607483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1543725049702182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473989d2096972346bd38f27471024d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0.5176471, g: 0.32156864, b: 0.36078432, a: 0}
 --- !u!1 &1562628174503152
 GameObject:
   m_ObjectHideFlags: 0

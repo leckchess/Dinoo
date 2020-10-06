@@ -4,35 +4,75 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private List<BoardTile> linkedMonsters = new List<BoardTile>();
-    private Board _board;
+    public static GameManager instance;
 
+    public List<BoardTile> linkedMonsters = new List<BoardTile>();
+    public Board Board { get; private set; }
+    string _prevTileId = "";
+
+    #region testing
     private void Start()
     {
         StartGame();
     }
+    #endregion
+
+    private void Awake()
+    {
+        instance = this;
+    }
     void StartGame()
     {
-        if (_board == null)
-            _board = FindObjectOfType<Board>();
-        _board.Init();
+        if (Board == null)
+            Board = FindObjectOfType<Board>();
+        Board.Init();
     }
 
-    void OnTilePressed(BoardTile tile)
+    public void OnTilePressed(BoardTile headtile)
     {
-        // lw awl 7d yb2a al head
+        linkedMonsters.Clear();
+        headtile.PrevTileId = "";
+        linkedMonsters.Add(headtile);
     }
-    void OnTileReleased(BoardTile tile)
+    public void OnTileReleased(BoardTile tile)
     {
+        if (linkedMonsters.Count == 0)
+            return;
         // if there is more than 3 n destroy / n kill
+        linkedMonsters.Clear();
     }
-    void OnTileEntered(BoardTile tile)
+    public void OnTileEntered(BoardTile tile)
     {
-        // if same color zi previous play yes else play no
+        if (linkedMonsters.Count == 0)
+            return;
+
+        if (linkedMonsters.Contains(tile))
+        {
+            if (tile.NextTileId == linkedMonsters[linkedMonsters.Count - 1].id && linkedMonsters[linkedMonsters.Count - 1].id == _prevTileId)
+            {
+                linkedMonsters.Remove(linkedMonsters[linkedMonsters.Count - 1]);
+            }
+            return;
+        }
+
+        if (tile.TileColor == linkedMonsters[linkedMonsters.Count - 1].TileColor && linkedMonsters[linkedMonsters.Count - 1].IsNeighbour(tile.id))
+        {
+            linkedMonsters[linkedMonsters.Count - 1].NextTileId = tile.id;
+            tile.PrevTileId = linkedMonsters[linkedMonsters.Count - 1].id;
+            linkedMonsters.Add(tile);
+            // play yes animation
+        }
+        else
+        {
+            //play no animation
+        }
     }
-    void OnTileExit(BoardTile tile)
+    public void OnTileExit(BoardTile tile)
     {
-        // play sad aw 7aga kda
-        // lw prev == next yb2a clear this else add next lw same color
+        if (linkedMonsters.Count == 0)
+            return;
+
+        _prevTileId = tile.id;
     }
+
 }

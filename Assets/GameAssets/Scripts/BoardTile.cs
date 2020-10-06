@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -10,15 +12,29 @@ public class BoardTile : MonoBehaviour
     public string id { get; private set; }
     public Monster monster;
     public bool IsChicked { get; set; }
-    public UnityAction<BoardTile> onMouseDown;
-    public UnityAction<BoardTile> onMouseUp;
-    public UnityAction<BoardTile> onMouseEnter;
-    public UnityAction<BoardTile> onMouseExit;
+    UnityAction<BoardTile> OnTilePressed;
+    UnityAction<BoardTile> OnTileReleased;
+    UnityAction<BoardTile> OnTileEntered;
+    UnityAction<BoardTile> OnTileExit;
+
+    public string[] neighbours = new string[8];
+
+    public Color TileColor { get { return monster.color; } }
+
+    public string PrevTileId { get; internal set; }
+    public string NextTileId { get; internal set; }
+
     internal void Init(GameObject tilemonster, string tileid)
     {
         id = name = tileid;
-        monster = tilemonster.AddComponent<Monster>();
+
+        monster = tilemonster.GetComponent<Monster>();
         monster.SetTransform(transform, Vector3.zero, Vector3.one);
+        OnTilePressed += GameManager.instance.OnTilePressed;
+        OnTileEntered += GameManager.instance.OnTileEntered;
+        OnTileReleased += GameManager.instance.OnTileReleased;
+        OnTileExit += GameManager.instance.OnTileExit;
+        GameManager.instance.Board.onGenerationDone.AddListener(GetNeighbours);
     }
 
     public void SetTransform(Transform parent, Vector3 size, Vector2 offset)
@@ -38,18 +54,41 @@ public class BoardTile : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        onMouseEnter.Invoke(this);
+        OnTileEntered.Invoke(this);
     }
     private void OnMouseExit()
     {
-        onMouseEnter.Invoke(this);
-          }
+        OnTileExit.Invoke(this);
+    }
     private void OnMouseDown()
     {
-        onMouseDown.Invoke(this);
+        OnTilePressed.Invoke(this);
     }
     private void OnMouseUp()
     {
-        onMouseUp.Invoke(this);
+        OnTileReleased.Invoke(this);
+    }
+
+    private void GetNeighbours()
+    {
+        int row = int.Parse(id[0].ToString());
+        int col = int.Parse(id[1].ToString());
+        int index = 0;
+        for (int i = row - 1; i <= row + 1;  i++)
+            for (int j = col - 1; j <= col + 1; j++)
+            {
+                if (i != row || j != col)
+                {
+                    neighbours[index] = GameManager.instance.Board.GetTile(i, j);
+                    index++;
+                }
+            }
+
+        GameManager.instance.Board.onGenerationDone.RemoveAllListeners();
+    }
+
+    public bool IsNeighbour(string id)
+    {
+        return neighbours.Contains(id);
     }
 }

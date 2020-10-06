@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 public class Board : MonoBehaviour
@@ -14,6 +15,7 @@ public class Board : MonoBehaviour
 
     #region Private Fields
     private BoardTile[,] tiles;
+    public UnityEvent onGenerationDone = new UnityEvent();
     #endregion
 
     public void Init()
@@ -43,5 +45,15 @@ public class Board : MonoBehaviour
             offset.y += deltay;
             offset.x = startX;
         }
+
+        onGenerationDone.Invoke();
+    }
+
+    public string GetTile(int row, int col)
+    {
+        if (row < 0 || col < 0 || row >= _level.rowsNumber || col >= _level.columnsNumber)
+            return "";
+
+        return tiles[row, col].id;
     }
 }
