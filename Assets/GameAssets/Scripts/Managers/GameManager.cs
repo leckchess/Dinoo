@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +7,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [SerializeField]
+    private Level _level;
+
     public List<BoardTile> linkedMonsters = new List<BoardTile>();
     public Board Board { get; private set; }
     string _prevTileId = "";
+
 
     #region testing
     private void Start()
@@ -25,23 +30,35 @@ public class GameManager : MonoBehaviour
     {
         if (Board == null)
             Board = FindObjectOfType<Board>();
-        Board.Init();
+        Board.Init(_level);
     }
 
-    public void OnTilePressed(BoardTile headtile)
+    public void OnTilePressed(BoardTile headtile, Action<int> callback)
     {
         linkedMonsters.Clear();
         headtile.PrevTileId = "";
         linkedMonsters.Add(headtile);
+        callback.Invoke((int)_level.rightSelectedAnimation);
     }
-    public void OnTileReleased(BoardTile tile)
+    public void OnTileReleased()
     {
         if (linkedMonsters.Count == 0)
             return;
-        // if there is more than 3 n destroy / n kill
-        linkedMonsters.Clear();
+
+        foreach (BoardTile tile in linkedMonsters)
+        {
+            if (linkedMonsters.Count >= 3)
+            {
+                tile.monster.PlayAnimation((int)_level.exploadAnimation);
+                tile.ReInitTile();
+            }
+            else
+                tile.monster.PlayAnimation((int)_level.idleAnimation);
+        }
+
+        linkedMonsters.Clear(); 
     }
-    public void OnTileEntered(BoardTile tile)
+    public void OnTileEntered(BoardTile tile, Action<int> callback)
     {
         if (linkedMonsters.Count == 0)
             return;
@@ -51,6 +68,7 @@ public class GameManager : MonoBehaviour
             if (tile.NextTileId == linkedMonsters[linkedMonsters.Count - 1].id && linkedMonsters[linkedMonsters.Count - 1].id == _prevTileId)
             {
                 linkedMonsters.Remove(linkedMonsters[linkedMonsters.Count - 1]);
+                callback.Invoke((int)_level.idleAnimation);
             }
             return;
         }
@@ -60,19 +78,23 @@ public class GameManager : MonoBehaviour
             linkedMonsters[linkedMonsters.Count - 1].NextTileId = tile.id;
             tile.PrevTileId = linkedMonsters[linkedMonsters.Count - 1].id;
             linkedMonsters.Add(tile);
-            // play yes animation
+            callback.Invoke((int)_level.rightSelectedAnimation);
         }
         else
         {
-            //play no animation
+            callback.Invoke((int)_level.wrongSelectedAnimation);
         }
     }
-    public void OnTileExit(BoardTile tile)
+    public void OnTileExit(BoardTile tile, Action<int> callback)
     {
         if (linkedMonsters.Count == 0)
             return;
 
         _prevTileId = tile.id;
+
+        if (!linkedMonsters.Contains(tile))
+            callback.Invoke((int)_level.idleAnimation);
+
     }
 
 }

@@ -22,3 +22,10 @@ MonoBehaviour:
   - {fileID: 1460914921332520, guid: 8de005e42069d4f489c28fb069419fb2, type: 3}
   - {fileID: 1669820002915910, guid: 09981d2ff83cd324eb1444466d2e8781, type: 3}
   - {fileID: 1538010778625564, guid: 181fcd7155ce1d440be8ed42f437b930, type: 3}
+  idleAnimation: 1
+  startAnimation: 3
+  rightSelectedAnimation: 11
+  wrongSelectedAnimation: 12
+  exploadAnimation: 8
+  winAnimation: 2
+  losAnimation: 13

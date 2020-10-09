@@ -164,6 +164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af78db5549a35e842b6b7d6cb421fb6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _level: {fileID: 11400000, guid: 7c35f3edee75b504599f72c833d9c85a, type: 2}
+  linkedMonsters: []
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,4 +417,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 7750617627234211179, guid: fb12306ff269eb3468cd7f1bc52278d1,
     type: 3}
-  _level: {fileID: 11400000, guid: 7c35f3edee75b504599f72c833d9c85a, type: 2}
+  onGenerationDone:
+    m_PersistentCalls:
+      m_Calls: []

@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
@@ -9,44 +11,49 @@ public class Board : MonoBehaviour
     #region Serializable Fields
     [SerializeField]
     private GameObject _tilePrefab;
-    [SerializeField]
     private Level _level;
     #endregion
 
     #region Private Fields
-    private BoardTile[,] tiles;
+    private Dictionary<string, BoardTile> tiles;
+    private Vector2 _tilesize;
+    Vector3 _boardoffset = Vector3.zero;
     public UnityEvent onGenerationDone = new UnityEvent();
     #endregion
 
-    public void Init()
+    public void Init(Level level)
     {
-        tiles = new BoardTile[_level.rowsNumber, _level.columnsNumber];
-        GenerateMonsters();
+        _level = level;
+        _tilesize = new Vector2((float)_level.width / _level.columnsNumber, (float)_level.height / _level.rowsNumber);
+        _boardoffset.x = -Mathf.Ceil((_level.columnsNumber / 2.0f) * _tilesize.x) + Mathf.Ceil((_tilesize.x * 0.5f) / _level.columnsNumber);
+        _boardoffset.y = -Mathf.Ceil((_level.rowsNumber / 2.0f) * _tilesize.y) + Mathf.Ceil((_tilesize.y * 0.5f) / _level.rowsNumber);
+        tiles = new Dictionary<string, BoardTile>();
+        GenerateTiles();
     }
-    private void GenerateMonsters()
+    private void GenerateTiles()
     {
-        Vector2 size = new Vector2((float)_level.width / _level.columnsNumber, (float)_level.height / _level.rowsNumber);
-        Vector3 offset = Vector3.zero;
-        offset.x = -Mathf.Ceil((_level.columnsNumber / 2.0f) * size.x) + Mathf.Ceil((size.x * 0.5f) / _level.columnsNumber);
-        offset.y = -Mathf.Ceil((_level.rowsNumber / 2.0f) * size.y) + Mathf.Ceil((size.y * 0.5f) / _level.rowsNumber);
-        float startX = offset.x;
-        float deltay = size.y, deltax = size.x;
+        float startX = _boardoffset.x;
+        float deltay = _tilesize.y, deltax = _tilesize.x;
+        Vector2 tileoffset = _boardoffset;
 
         for (int i = 0; i < _level.rowsNumber; i++)
         {
             for (int j = 0; j < _level.columnsNumber; j++)
             {
-                BoardTile tile = Instantiate(_tilePrefab, new Vector3(i * size.x, j * size.y, 0), Quaternion.identity).GetComponent<BoardTile>();
-                tile.SetTransform(transform, size, offset);
-                tile.Init(_level.GetRandomMonster(), i.ToString() + j.ToString());
-                tiles[i, j] = tile;
-                offset.x += deltax;
+                BoardTile tile = Instantiate(_tilePrefab, Random.insideUnitSphere * 50, Quaternion.identity).GetComponent<BoardTile>();
+                tile.SetTransform(transform, _tilesize, tileoffset);
+                string id = i.ToString() + j.ToString();
+                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation);
+                tiles.Add(id, tile);
+                tileoffset.x += deltax;
             }
-            offset.y += deltay;
-            offset.x = startX;
+            tileoffset.y += deltay;
+            tileoffset.x = startX;
         }
 
         onGenerationDone.Invoke();
+        if (!CheckForAvailableMoves())
+            RandomizeTiles();
     }
 
     public string GetTile(int row, int col)
@@ -54,6 +61,82 @@ public class Board : MonoBehaviour
         if (row < 0 || col < 0 || row >= _level.rowsNumber || col >= _level.columnsNumber)
             return "";
 
-        return tiles[row, col].id;
+
+        return tiles[row.ToString() + col.ToString()].id;
+    }
+
+    public void OnTileReinit(BoardTile tile)
+    {
+        List<BoardTile> samecoltiles = GetReallocatingTiles(tile.Row, tile.Column);
+        int row;
+        string tileid = tile.id;
+        foreach (BoardTile t in samecoltiles)
+        {
+            if (t.id == tileid)
+            {
+                row = _level.rowsNumber - 1;
+                t.transform.position = Random.insideUnitSphere * 50;
+                t.Init(_level.GetRandomMonster(), row.ToString() + t.Column.ToString(), (int)_level.idleAnimation);
+                tiles[t.id] = t;
+            }
+            else
+            {
+                row = t.Row - 1;
+                t.Init(row.ToString() + t.Column.ToString(), (int)_level.idleAnimation);
+                tiles[t.id] = t;
+            }
+
+            Vector3 offset = _boardoffset + new Vector3(t.Column * _tilesize.x, row * _tilesize.y);
+            t.SetTransform(transform, _tilesize, offset);
+
+        }
+        onGenerationDone.Invoke();
+
+        if (!CheckForAvailableMoves())
+            RandomizeTiles();
+    }
+
+    private List<BoardTile> GetReallocatingTiles(int row, int col)
+    {
+        List<BoardTile> reallocatingtiles = new List<BoardTile>();
+        for (int i = row; i < _level.rowsNumber; i++)
+        {
+            reallocatingtiles.Add(tiles[i.ToString() + col.ToString()]);
+        }
+        return reallocatingtiles;
+    }
+
+    private bool CheckForAvailableMoves()
+    {
+        int n = 0;
+        Color color = Color.white;
+        foreach (BoardTile tile in tiles.Values)
+        {
+            if (n == 0)
+            {
+                color = tile.TileColor;
+                n++;
+            }
+            else
+            {
+                if (tile.TileColor == color)
+                {
+                    n++;
+                    if (n >= 3)
+                        return true;
+                }
+                else
+                {
+                    color = tile.TileColor;
+                    n = 1;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void RandomizeTiles()
+    {
+
     }
 }

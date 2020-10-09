@@ -8,7 +8,15 @@ public class Level : ScriptableObject
     public int height;
     public int columnsNumber;
     public int rowsNumber;
+    [Header("monsters")]
     public List<GameObject> _monsters = new List<GameObject>();
+    public Animations idleAnimation = Animations.Idle;
+    public Animations startAnimation = Animations.Hello;
+    public Animations rightSelectedAnimation = Animations.Yes;
+    public Animations wrongSelectedAnimation = Animations.No;
+    public Animations exploadAnimation = Animations.DieFront;
+    public Animations winAnimation = Animations.Happy;
+    public Animations losAnimation = Animations.Sick;
 
     public void AddMonster(GameObject monster)
     {

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8911189677192951283}
   - component: {fileID: -410718938198366725}
-  - component: {fileID: 4984202584057510591}
+  - component: {fileID: 7165140102278366686}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -44,8 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc4535fa814ebca4d9da845daf20b52e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &4984202584057510591
-BoxCollider:
+  monster: {fileID: 0}
+  neighbours:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+--- !u!135 &7165140102278366686
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -55,5 +65,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.956408, z: 0.8014148}
-  m_Center: {x: 0, y: 0.42008138, z: 0.016952366}
+  m_Radius: 0.42
+  m_Center: {x: 0, y: 0.39, z: 0}

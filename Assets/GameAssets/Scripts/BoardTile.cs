@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -10,31 +11,50 @@ using UnityEngine.EventSystems;
 public class BoardTile : MonoBehaviour
 {
     public string id { get; private set; }
+    public int Column { get { return int.Parse(id[1].ToString()); } private set { } }
+    public int Row { get { return int.Parse(id[0].ToString()); } private set { } }
     public Monster monster;
     public bool IsChicked { get; set; }
-    UnityAction<BoardTile> OnTilePressed;
-    UnityAction<BoardTile> OnTileReleased;
-    UnityAction<BoardTile> OnTileEntered;
-    UnityAction<BoardTile> OnTileExit;
+    UnityAction<BoardTile, Action<int>> OnTilePressed;
+    UnityEvent OnTileReleased = new UnityEvent();
+    UnityAction<BoardTile, Action<int>> OnTileEntered;
+    UnityAction<BoardTile, Action<int>> OnTileExit;
+    UnityAction<BoardTile> onReInit;
 
-    public string[] neighbours = new string[8];
+    public List<string> neighbours = new List<string>();
 
     public Color TileColor { get { return monster.color; } }
 
     public string PrevTileId { get; internal set; }
     public string NextTileId { get; internal set; }
 
-    internal void Init(GameObject tilemonster, string tileid)
+    private void Start()
+    {
+        ListenToEvents();
+    }
+
+    internal void Init(GameObject tilemonster, string tileid, int idleanimation)
     {
         id = name = tileid;
-
         monster = tilemonster.GetComponent<Monster>();
         monster.SetTransform(transform, Vector3.zero, Vector3.one);
+        monster.PlayAnimation(idleanimation);
+        GameManager.instance.Board.onGenerationDone?.AddListener(GetNeighbours);
+    }
+
+    internal void Init(string tileid, int idleanimation)
+    {
+        id = name = tileid;
+        monster.PlayAnimation(idleanimation);
+    }
+
+    private void ListenToEvents()
+    {
         OnTilePressed += GameManager.instance.OnTilePressed;
         OnTileEntered += GameManager.instance.OnTileEntered;
-        OnTileReleased += GameManager.instance.OnTileReleased;
+        OnTileReleased.AddListener(GameManager.instance.OnTileReleased);
         OnTileExit += GameManager.instance.OnTileExit;
-        GameManager.instance.Board.onGenerationDone.AddListener(GetNeighbours);
+        onReInit += GameManager.instance.Board.OnTileReinit;
     }
 
     public void SetTransform(Transform parent, Vector3 size, Vector2 offset)
@@ -49,46 +69,57 @@ public class BoardTile : MonoBehaviour
             size.x = size.z = size.y;
         }
         transform.localScale = new Vector3(size.x, size.y, size.z);
-        transform.position = new Vector3(offset.x, offset.y, 1);
+        transform.DOMove(new Vector3(offset.x, offset.y, 1), 1);
     }
 
     private void OnMouseEnter()
     {
-        OnTileEntered.Invoke(this);
+        OnTileEntered.Invoke(this, (animation) =>
+        {
+            monster.PlayAnimation(animation);
+        });
     }
     private void OnMouseExit()
     {
-        OnTileExit.Invoke(this);
+        OnTileExit.Invoke(this, (animation) =>
+        {
+            monster.PlayAnimation(animation);
+        });
     }
     private void OnMouseDown()
     {
-        OnTilePressed.Invoke(this);
+        OnTilePressed.Invoke(this, (animation) =>
+        {
+            monster.PlayAnimation(animation);
+        });
     }
     private void OnMouseUp()
     {
-        OnTileReleased.Invoke(this);
+        OnTileReleased.Invoke();
     }
 
     private void GetNeighbours()
     {
-        int row = int.Parse(id[0].ToString());
-        int col = int.Parse(id[1].ToString());
-        int index = 0;
-        for (int i = row - 1; i <= row + 1;  i++)
-            for (int j = col - 1; j <= col + 1; j++)
+        neighbours.Clear();
+        for (int i = Row - 1; i <= Row + 1; i++)
+            for (int j = Column - 1; j <= Column + 1; j++)
             {
-                if (i != row || j != col)
+                if (i != Row || j != Column)
                 {
-                    neighbours[index] = GameManager.instance.Board.GetTile(i, j);
-                    index++;
+                    if (!string.IsNullOrEmpty(GameManager.instance.Board.GetTile(i, j)))
+                        neighbours.Add(GameManager.instance.Board.GetTile(i, j));
                 }
             }
-
-        GameManager.instance.Board.onGenerationDone.RemoveAllListeners();
     }
 
     public bool IsNeighbour(string id)
     {
         return neighbours.Contains(id);
+    }
+
+    public void ReInitTile()
+    {
+        Destroy(monster.gameObject);
+        onReInit.Invoke(this);
     }
 }
