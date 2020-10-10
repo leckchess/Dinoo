@@ -52,14 +52,19 @@ public class Board : MonoBehaviour
         }
 
         onGenerationDone.Invoke();
-        if (!CheckForAvailableMoves())
-            RandomizeTiles();
+        if (!CheckForAvailableMoves(0, _level.columnsNumber, 0, _level.rowsNumber))
+        RandomizeTiles();
     }
+
+    //public BoardTile GetTile(string id)
+    //{
+    //    return tiles[id];
+    //}
 
     public string GetTile(int row, int col)
     {
         if (row < 0 || col < 0 || row >= _level.rowsNumber || col >= _level.columnsNumber)
-            return "";
+            return null;
 
 
         return tiles[row.ToString() + col.ToString()].id;
@@ -92,8 +97,8 @@ public class Board : MonoBehaviour
         }
         onGenerationDone.Invoke();
 
-        if (!CheckForAvailableMoves())
-            RandomizeTiles();
+        //if (!CheckForAvailableMoves())
+        //    RandomizeTiles();
     }
 
     private List<BoardTile> GetReallocatingTiles(int row, int col)
@@ -106,37 +111,59 @@ public class Board : MonoBehaviour
         return reallocatingtiles;
     }
 
-    private bool CheckForAvailableMoves()
+    private bool CheckForAvailableMoves()// int left, int right, int up, int down)
     {
-        int n = 0;
-        Color color = Color.white;
-        foreach (BoardTile tile in tiles.Values)
-        {
-            if (n == 0)
-            {
-                color = tile.TileColor;
-                n++;
-            }
-            else
-            {
-                if (tile.TileColor == color)
-                {
-                    n++;
-                    if (n >= 3)
-                        return true;
-                }
-                else
-                {
-                    color = tile.TileColor;
-                    n = 1;
-                }
-            }
-        }
-        return false;
+        //int midx = left + (right - left) / 2;
+        //int midy = down + (up - down) / 2;
+        //print(midy.ToString() + midx.ToString());
+
+        // if (GetSimilarNeighbours(midy.ToString() + midx.ToString()) >= 2)
+        //    return true;
+
+        //return CheckForAvailableMoves(midx + 1, right, up, midy);
+
+        //int count = 0;
+
+        //do
+        //{
+        //    string id = (_level.rowsNumber / 2).ToString() + (_level.columnsNumber / 2).ToString();
+        //    BoardTile tile = tiles[id];
+        //    count = tile.GetSimilarNeighbours();
+
+        //} while (count < 2);
+        //int n = 0;
+        //Color color = Color.white;
+        //foreach (BoardTile tile in tiles.Values)
+        //{
+        //    if (n == 0)
+        //    {
+        //        color = tile.TileColor;
+        //        n++;
+        //    }
+        //    else
+        //    {
+        //        if (tile.TileColor == color)
+        //        {
+        //            n++;
+        //            if (n >= 3)
+        //                return true;
+        //        }
+        //        else
+        //        {
+        //            color = tile.TileColor;
+        //            n = 1;
+        //        }
+        //    }
+        //}
+    }
+
+    private int GetSimilarNeighbours(string id)
+    {
+        throw new System.NotImplementedException();
     }
 
     private void RandomizeTiles()
     {
-
+        print("rand");
     }
 }

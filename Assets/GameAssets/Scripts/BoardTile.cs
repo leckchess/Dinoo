@@ -97,7 +97,6 @@ public class BoardTile : MonoBehaviour
     {
         OnTileReleased.Invoke();
     }
-
     private void GetNeighbours()
     {
         neighbours.Clear();
@@ -106,20 +105,35 @@ public class BoardTile : MonoBehaviour
             {
                 if (i != Row || j != Column)
                 {
-                    if (!string.IsNullOrEmpty(GameManager.instance.Board.GetTile(i, j)))
+                    if (GameManager.instance.Board.GetTile(i, j) != null)
                         neighbours.Add(GameManager.instance.Board.GetTile(i, j));
                 }
             }
     }
-
     public bool IsNeighbour(string id)
     {
         return neighbours.Contains(id);
     }
-
     public void ReInitTile()
     {
         Destroy(monster.gameObject);
         onReInit.Invoke(this);
     }
+    //public int GetSimilarNeighbours()
+    //{
+    //    List<string> similartiles = new List<string>();
+    //    foreach (string neighbour in neighbours)
+    //    {
+    //        if (GameManager.instance.Board.GetTile(neighbour).TileColor == TileColor)
+    //            similartiles.Add(neighbour);
+    //    }
+    //    if (similartiles.Count < 2)
+    //    {
+    //        foreach (string tile in similartiles)
+    //        {
+    //            GameManager.instance.Board.GetTile(tile).GetSimilarNeighbours();
+    //        }
+    //    }
+    //    return similartiles.Count;
+    //}
 }
