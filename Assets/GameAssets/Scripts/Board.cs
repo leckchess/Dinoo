@@ -11,14 +11,16 @@ public class Board : MonoBehaviour
     #region Serializable Fields
     [SerializeField]
     private GameObject _tilePrefab;
-    private Level _level;
     #endregion
 
     #region Private Fields
+    private Level _level;
     private Dictionary<string, BoardTile> tiles;
     private Vector2 _tilesize;
-    Vector3 _boardoffset = Vector3.zero;
+    private Vector3 _boardoffset = Vector3.zero;
     public UnityEvent onGenerationDone = new UnityEvent();
+    public BoardTile hintTile;
+    private BoardTile searchtile;
     #endregion
 
     public void Init(Level level)
@@ -52,14 +54,10 @@ public class Board : MonoBehaviour
         }
 
         onGenerationDone.Invoke();
-        if (!CheckForAvailableMoves(0, _level.columnsNumber, 0, _level.rowsNumber))
-        RandomizeTiles();
+        searchtile = tiles["00"];
+        if (!CheckForAvailableMoves(searchtile, 0))
+            RandomizeTiles();
     }
-
-    //public BoardTile GetTile(string id)
-    //{
-    //    return tiles[id];
-    //}
 
     public string GetTile(int row, int col)
     {
@@ -97,8 +95,9 @@ public class Board : MonoBehaviour
         }
         onGenerationDone.Invoke();
 
-        //if (!CheckForAvailableMoves())
-        //    RandomizeTiles();
+        searchtile = tiles["00"];
+        if (!CheckForAvailableMoves(searchtile, 1))
+            RandomizeTiles();
     }
 
     private List<BoardTile> GetReallocatingTiles(int row, int col)
@@ -111,57 +110,39 @@ public class Board : MonoBehaviour
         return reallocatingtiles;
     }
 
-    private bool CheckForAvailableMoves()// int left, int right, int up, int down)
+    private bool CheckForAvailableMoves(BoardTile tile,int n, string parenttile = "")
     {
-        //int midx = left + (right - left) / 2;
-        //int midy = down + (up - down) / 2;
-        //print(midy.ToString() + midx.ToString());
+        Color color = tile.TileColor;
+        string last = "";
+        foreach (string neighbour in tile.neighbours)
+        {
+            if (tiles[neighbour].TileColor == color && neighbour != parenttile)
+            {
+                n++; 
+                last = neighbour;
+            }
+        }
+        if (n >= 3)
+        {
+            hintTile = tile;
+            StopCoroutine("CheckForAvailableMoves");
+            return true;
+        }
+        else if (n >= 1 && !string.IsNullOrEmpty(last))
+            return CheckForAvailableMoves(tiles[last], n, tile.id);
+        else if (searchtile.Column + 1 < _level.columnsNumber)
+        {
+            searchtile = tiles[searchtile.Row.ToString() + (searchtile.Column + 1).ToString()];
+            return CheckForAvailableMoves(searchtile, 0);
+        }
+        else if (searchtile.Row + 1 < _level.rowsNumber)
+        {
+            searchtile = tiles[(searchtile.Row + 1).ToString() + "0"];
+            return CheckForAvailableMoves(searchtile, 0);
+        }
 
-        // if (GetSimilarNeighbours(midy.ToString() + midx.ToString()) >= 2)
-        //    return true;
-
-        //return CheckForAvailableMoves(midx + 1, right, up, midy);
-
-        //int count = 0;
-
-        //do
-        //{
-        //    string id = (_level.rowsNumber / 2).ToString() + (_level.columnsNumber / 2).ToString();
-        //    BoardTile tile = tiles[id];
-        //    count = tile.GetSimilarNeighbours();
-
-        //} while (count < 2);
-        //int n = 0;
-        //Color color = Color.white;
-        //foreach (BoardTile tile in tiles.Values)
-        //{
-        //    if (n == 0)
-        //    {
-        //        color = tile.TileColor;
-        //        n++;
-        //    }
-        //    else
-        //    {
-        //        if (tile.TileColor == color)
-        //        {
-        //            n++;
-        //            if (n >= 3)
-        //                return true;
-        //        }
-        //        else
-        //        {
-        //            color = tile.TileColor;
-        //            n = 1;
-        //        }
-        //    }
-        //}
+        return false;
     }
-
-    private int GetSimilarNeighbours(string id)
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void RandomizeTiles()
     {
         print("rand");
