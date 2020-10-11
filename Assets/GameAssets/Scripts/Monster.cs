@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
@@ -16,7 +16,7 @@ public class Monster : MonoBehaviour
 
     public void PlayAnimation(int animationnumber)
     {
-        if(_anim == null)
+        if (_anim == null)
             _anim = GetComponent<Animator>();
 
         _anim.SetInteger("animation", animationnumber);

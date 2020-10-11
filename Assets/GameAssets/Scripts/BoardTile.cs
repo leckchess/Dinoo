@@ -1,12 +1,8 @@
 ﻿using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class BoardTile : MonoBehaviour
 {
@@ -72,6 +68,12 @@ public class BoardTile : MonoBehaviour
         transform.DOMove(new Vector3(offset.x, offset.y, 1), 1);
     }
 
+    public void SetMonster(Monster newmonster)
+    {
+        monster = newmonster;
+        monster.SetTransform(transform, UnityEngine.Random.insideUnitCircle * 50, Vector3.one);
+        monster.transform.DOLocalMove(Vector3.zero, 1);
+    }
     private void OnMouseEnter()
     {
         OnTileEntered.Invoke(this, (animation) =>
@@ -119,21 +121,4 @@ public class BoardTile : MonoBehaviour
         Destroy(monster.gameObject);
         onReInit.Invoke(this);
     }
-    //public int GetSimilarNeighbours()
-    //{
-    //    List<string> similartiles = new List<string>();
-    //    foreach (string neighbour in neighbours)
-    //    {
-    //        if (GameManager.instance.Board.GetTile(neighbour).TileColor == TileColor)
-    //            similartiles.Add(neighbour);
-    //    }
-    //    if (similartiles.Count < 2)
-    //    {
-    //        foreach (string tile in similartiles)
-    //        {
-    //            GameManager.instance.Board.GetTile(tile).GetSimilarNeighbours();
-    //        }
-    //    }
-    //    return similartiles.Count;
-    //}
 }
