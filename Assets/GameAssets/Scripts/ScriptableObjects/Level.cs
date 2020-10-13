@@ -4,6 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Level", menuName = "Dino/Level")]
 public class Level : ScriptableObject
 {
+    [Header("level")]
+    public Color bgColor;
+    public Color bgPhoto;
+    [Header("board")]
     public int width;
     public int height;
     public int columnsNumber;
@@ -17,7 +21,11 @@ public class Level : ScriptableObject
     public Animations exploadAnimation = Animations.DieFront;
     public Animations winAnimation = Animations.Happy;
     public Animations losAnimation = Animations.Sick;
-
+    [Header("gameplay")]
+    public int numberOfMoves;
+    public int time;
+    public int numberOfHints;
+    public bool timeBased;
     public void AddMonster(GameObject monster)
     {
         _monsters.Add(monster);

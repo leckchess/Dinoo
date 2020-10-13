@@ -17,6 +17,7 @@ public class Board : MonoBehaviour
 
     #region Public Fields
     public UnityEvent onGenerationDone = new UnityEvent();
+    public int numberOfReallocatingTiles;
     #endregion
 
     #region Private Fields
@@ -98,12 +99,13 @@ public class Board : MonoBehaviour
 
         }
 
-        //if (numberOfReallocatingTies == 0)
-        //{
-        //    onGenerationDone.Invoke();
-        //    _searchtile = _tiles["00"];
-        //    CheckForAvailableMoves(_searchtile, 1);
-        //}
+        numberOfReallocatingTiles--;
+        if (numberOfReallocatingTiles == 0)
+        {
+            onGenerationDone.Invoke();
+            _searchtile = _tiles["00"];
+            CheckForAvailableMoves(_searchtile, 1);
+        }
     }
 
     private List<BoardTile> GetReallocatingTiles(int row, int col)
@@ -164,7 +166,6 @@ public class Board : MonoBehaviour
             for (int j = 0; j < cols.Length; j++)
             {
                 string id = rows[i].ToString() + cols[j].ToString();
-                print(id);
                 Monster monster1 = _tiles[id].monster;
                 if (monster0 == null)
                 {
@@ -183,7 +184,6 @@ public class Board : MonoBehaviour
         _searchtile = _tiles["00"];
         CheckForAvailableMoves(_searchtile, 0);
     }
-
 
     // for testing
     private void Update()

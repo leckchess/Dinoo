@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
         if (linkedMonsters.Count == 0)
             return;
 
+        Board.numberOfReallocatingTiles = linkedMonsters.Count;
         foreach (BoardTile tile in linkedMonsters)
         {
             if (linkedMonsters.Count >= 3)
