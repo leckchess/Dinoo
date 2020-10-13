@@ -6,12 +6,13 @@ public class Level : ScriptableObject
 {
     [Header("level")]
     public Color bgColor;
-    public Color bgPhoto;
+    public int tileScore;
     [Header("board")]
     public int width;
     public int height;
     public int columnsNumber;
     public int rowsNumber;
+    public Vector2 offset;
     [Header("monsters")]
     public List<GameObject> _monsters = new List<GameObject>();
     public Animations idleAnimation = Animations.Idle;
@@ -23,9 +24,6 @@ public class Level : ScriptableObject
     public Animations losAnimation = Animations.Sick;
     [Header("gameplay")]
     public int numberOfMoves;
-    public int time;
-    public int numberOfHints;
-    public bool timeBased;
     public void AddMonster(GameObject monster)
     {
         _monsters.Add(monster);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,15 +9,17 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Level _level;
 
-    public List<BoardTile> linkedMonsters = new List<BoardTile>();
+    private string _prevTileId = "";
+    private int _coins;
+    private UIManager _uiManager;
+    private List<BoardTile> _linkedMonsters = new List<BoardTile>();
+    private bool _useHummer;
     public Board Board { get; private set; }
-    string _prevTileId = "";
-
 
     #region testing
     private void Start()
     {
-        StartGame();
+        StartGame(_level);
     }
     #endregion
 
@@ -26,59 +27,77 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
     }
-    void StartGame()
+    void StartGame(Level level)
     {
+        if (_uiManager == null)
+            _uiManager = FindObjectOfType<UIManager>();
         if (Board == null)
             Board = FindObjectOfType<Board>();
         Board.Init(_level);
+        Camera.main.backgroundColor = _level.bgColor;
+        _uiManager.StartGame(_level.numberOfMoves, _level.bgColor);
     }
-
+    public void UseHummer()
+    {
+        _useHummer = !_useHummer;
+    }
     public void OnTilePressed(BoardTile headtile, Action<int> callback)
     {
-        linkedMonsters.Clear();
-        headtile.PrevTileId = "";
-        linkedMonsters.Add(headtile);
-        callback.Invoke((int)_level.rightSelectedAnimation);
+        if (_useHummer)
+        {
+            headtile.ReInitTile();
+        }
+        else
+        {
+            _linkedMonsters.Clear();
+            headtile.PrevTileId = "";
+            _linkedMonsters.Add(headtile);
+            callback.Invoke((int)_level.rightSelectedAnimation);
+        }
     }
     public void OnTileReleased()
     {
-        if (linkedMonsters.Count == 0)
+        if (_linkedMonsters.Count == 0)
             return;
+        if (_linkedMonsters.Count >= 3)
+            _uiManager.OnMove();
 
-        Board.numberOfReallocatingTiles = linkedMonsters.Count;
-        foreach (BoardTile tile in linkedMonsters)
+        Board.numberOfReallocatingTiles = _linkedMonsters.Count;
+        foreach (BoardTile tile in _linkedMonsters)
         {
-            if (linkedMonsters.Count >= 3)
+            if (_linkedMonsters.Count >= 3)
             {
                 tile.monster.PlayAnimation((int)_level.exploadAnimation);
                 tile.ReInitTile();
+                _coins += _level.tileScore;
+                _uiManager.Score = _coins;
             }
             else
                 tile.monster.PlayAnimation((int)_level.idleAnimation);
         }
 
-        linkedMonsters.Clear(); 
+        _linkedMonsters.Clear();
     }
     public void OnTileEntered(BoardTile tile, Action<int> callback)
     {
-        if (linkedMonsters.Count == 0)
+        if (_linkedMonsters.Count == 0)
             return;
 
-        if (linkedMonsters.Contains(tile))
+        if (_linkedMonsters.Contains(tile))
         {
-            if (tile.NextTileId == linkedMonsters[linkedMonsters.Count - 1].id && linkedMonsters[linkedMonsters.Count - 1].id == _prevTileId)
+            if (tile.NextTileId == _linkedMonsters[_linkedMonsters.Count - 1].id && _linkedMonsters[_linkedMonsters.Count - 1].id == _prevTileId)
             {
-                linkedMonsters.Remove(linkedMonsters[linkedMonsters.Count - 1]);
+                _linkedMonsters.Remove(_linkedMonsters[_linkedMonsters.Count - 1]);
                 callback.Invoke((int)_level.idleAnimation);
             }
             return;
         }
 
-        if (tile.TileColor == linkedMonsters[linkedMonsters.Count - 1].TileColor && linkedMonsters[linkedMonsters.Count - 1].IsNeighbour(tile.id))
+        if (tile.TileColor == _linkedMonsters[_linkedMonsters.Count - 1].TileColor && _linkedMonsters[_linkedMonsters.Count - 1].IsNeighbour(tile.id))
         {
-            linkedMonsters[linkedMonsters.Count - 1].NextTileId = tile.id;
-            tile.PrevTileId = linkedMonsters[linkedMonsters.Count - 1].id;
-            linkedMonsters.Add(tile);
+            _linkedMonsters[_linkedMonsters.Count - 1].NextTileId = tile.id;
+            tile.PrevTileId = _linkedMonsters[_linkedMonsters.Count - 1].id;
+            _linkedMonsters.Add(tile);
             callback.Invoke((int)_level.rightSelectedAnimation);
         }
         else
@@ -88,12 +107,12 @@ public class GameManager : MonoBehaviour
     }
     public void OnTileExit(BoardTile tile, Action<int> callback)
     {
-        if (linkedMonsters.Count == 0)
+        if (_linkedMonsters.Count == 0)
             return;
 
         _prevTileId = tile.id;
 
-        if (!linkedMonsters.Contains(tile))
+        if (!_linkedMonsters.Contains(tile))
             callback.Invoke((int)_level.idleAnimation);
 
     }

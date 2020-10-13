@@ -1,12 +1,10 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using DG.Tweening.Plugins.Options;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Tilemaps;
-using DG.Tweening;
 
 public class Board : MonoBehaviour
 {
@@ -27,43 +25,18 @@ public class Board : MonoBehaviour
     private Vector3 _boardoffset = Vector3.zero;
     public BoardTile _hintTile;
     private BoardTile _searchtile;
+    private bool _showhint;
     #endregion
 
     public void Init(Level level)
     {
         _level = level;
         _tilesize = new Vector2((float)_level.width / _level.columnsNumber, (float)_level.height / _level.rowsNumber);
-        _boardoffset.x = -Mathf.Ceil((_level.columnsNumber / 2.0f) * _tilesize.x) + Mathf.Ceil((_tilesize.x * 0.5f) / _level.columnsNumber);
-        _boardoffset.y = -Mathf.Ceil((_level.rowsNumber / 2.0f) * _tilesize.y) + Mathf.Ceil((_tilesize.y * 0.5f) / _level.rowsNumber);
+        _boardoffset.x = -Mathf.Ceil((_level.columnsNumber / 2.0f) * _tilesize.x) + Mathf.Ceil((_tilesize.x * 0.5f) / _level.columnsNumber) + _level.offset.x;
+        _boardoffset.y = -Mathf.Ceil((_level.rowsNumber / 2.0f) * _tilesize.y) + Mathf.Ceil((_tilesize.y * 0.5f) / _level.rowsNumber) + _level.offset.y;
         _tiles = new Dictionary<string, BoardTile>();
         GenerateTiles();
     }
-    private void GenerateTiles()
-    {
-        float startX = _boardoffset.x;
-        float deltay = _tilesize.y, deltax = _tilesize.x;
-        Vector2 tileoffset = _boardoffset;
-
-        for (int i = 0; i < _level.rowsNumber; i++)
-        {
-            for (int j = 0; j < _level.columnsNumber; j++)
-            {
-                BoardTile tile = Instantiate(_tilePrefab, Random.insideUnitSphere * 50, Quaternion.identity).GetComponent<BoardTile>();
-                tile.SetTransform(transform, _tilesize, tileoffset);
-                string id = i.ToString() + j.ToString();
-                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation);
-                _tiles.Add(id, tile);
-                tileoffset.x += deltax;
-            }
-            tileoffset.y += deltay;
-            tileoffset.x = startX;
-        }
-
-        onGenerationDone.Invoke();
-        _searchtile = _tiles["00"];
-        CheckForAvailableMoves(_searchtile, 1);
-    }
-
     public string GetTile(int row, int col)
     {
         if (row < 0 || col < 0 || row >= _level.rowsNumber || col >= _level.columnsNumber)
@@ -72,7 +45,6 @@ public class Board : MonoBehaviour
 
         return _tiles[row.ToString() + col.ToString()].id;
     }
-
     public void OnTileReinit(BoardTile tile)
     {
         List<BoardTile> samecoltiles = GetReallocatingTiles(tile.Row, tile.Column);
@@ -108,8 +80,49 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void SHowHint()
+    {
+        _showhint = true;
+        StartCoroutine(ShowHint());
+    }
+    private IEnumerator ShowHint()
+    {
+        if (!_showhint)
+            yield break;
+        _hintTile.monster.transform.DOScale(new Vector3(2f, 2f, 2f), 1);
+        yield return new WaitForSeconds(0.2f);
+        _hintTile.monster.transform.DOScale(Vector3.one, 1);
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(ShowHint());
+    }
+    private void GenerateTiles()
+    {
+        float startX = _boardoffset.x;
+        float deltay = _tilesize.y, deltax = _tilesize.x;
+        Vector2 tileoffset = _boardoffset;
+
+        for (int i = 0; i < _level.rowsNumber; i++)
+        {
+            for (int j = 0; j < _level.columnsNumber; j++)
+            {
+                BoardTile tile = Instantiate(_tilePrefab, Random.insideUnitSphere * 50, Quaternion.identity).GetComponent<BoardTile>();
+                tile.SetTransform(transform, _tilesize, tileoffset);
+                string id = i.ToString() + j.ToString();
+                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation);
+                _tiles.Add(id, tile);
+                tileoffset.x += deltax;
+            }
+            tileoffset.y += deltay;
+            tileoffset.x = startX;
+        }
+
+        onGenerationDone.Invoke();
+        _searchtile = _tiles["00"];
+        CheckForAvailableMoves(_searchtile, 1);
+    }
     private List<BoardTile> GetReallocatingTiles(int row, int col)
     {
+        _showhint = false;
         List<BoardTile> reallocatingtiles = new List<BoardTile>();
         for (int i = row; i < _level.rowsNumber; i++)
         {
@@ -117,7 +130,6 @@ public class Board : MonoBehaviour
         }
         return reallocatingtiles;
     }
-
     private bool CheckForAvailableMoves(BoardTile tile, int n, string parenttile = "")
     {
         _hintTile = null;

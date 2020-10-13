@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
@@ -13,7 +11,6 @@ public class Monster : MonoBehaviour
         transform.localPosition = position;
         transform.localScale = scale;
     }
-
     public void PlayAnimation(int animationnumber)
     {
         if (_anim == null)

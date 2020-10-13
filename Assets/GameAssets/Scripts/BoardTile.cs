@@ -18,7 +18,6 @@ public class BoardTile : MonoBehaviour
     UnityAction<BoardTile> onReInit;
 
     public List<string> neighbours = new List<string>();
-
     public Color TileColor { get { return monster.color; } }
 
     public string PrevTileId { get; internal set; }

@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987fca8b68a5b104696f4c8171827675, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
+  bgColor: {r: 0, g: 0, b: 0, a: 0}
+  tileScore: 10
   width: 10
   height: 10
   columnsNumber: 10
   rowsNumber: 10
+  offset: {x: 2, y: 0}
   _monsters:
   - {fileID: 1271500296056796, guid: 600c0a3ade4238148a2721d7899453e0, type: 3}
   - {fileID: 1301625778776442, guid: 605d1d0ed0001b94eb47a24d8c8a7350, type: 3}
@@ -49,3 +52,4 @@ MonoBehaviour:
   exploadAnimation: 8
   winAnimation: 2
   losAnimation: 13
+  numberOfMoves: 50
