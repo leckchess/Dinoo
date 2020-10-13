@@ -16,36 +16,39 @@ public class GameManager : MonoBehaviour
     private bool _useHummer;
     public Board Board { get; private set; }
 
-    #region testing
-    private void Start()
-    {
-        StartGame(_level);
-    }
-    #endregion
-
     private void Awake()
     {
         instance = this;
     }
-    void StartGame(Level level)
+    private void Start()
+    {
+        StartGame();
+    }
+    public void StartGame()
     {
         if (_uiManager == null)
             _uiManager = FindObjectOfType<UIManager>();
         if (Board == null)
             Board = FindObjectOfType<Board>();
+
+        _level = LevelsManager.instance.CurrentLevel;
         Board.Init(_level);
         Camera.main.backgroundColor = _level.bgColor;
         _uiManager.StartGame(_level.numberOfMoves, _level.bgColor);
     }
     public void UseHummer()
     {
-        _useHummer = !_useHummer;
+        if (_useHummer)
+            return;
+
+        _useHummer = true;
     }
     public void OnTilePressed(BoardTile headtile, Action<int> callback)
     {
         if (_useHummer)
         {
             headtile.ReInitTile();
+            _useHummer = false;
         }
         else
         {
@@ -116,5 +119,4 @@ public class GameManager : MonoBehaviour
             callback.Invoke((int)_level.idleAnimation);
 
     }
-
 }
