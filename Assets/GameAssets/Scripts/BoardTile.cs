@@ -11,10 +11,10 @@ public class BoardTile : MonoBehaviour
     public int Row { get { return int.Parse(id[0].ToString()); } private set { } }
     public Monster monster;
     public bool IsChicked { get; set; }
-    UnityAction<BoardTile, Action<int>> OnTilePressed;
+    UnityAction<BoardTile> OnTilePressed;
     UnityEvent OnTileReleased = new UnityEvent();
-    UnityAction<BoardTile, Action<int>> OnTileEntered;
-    UnityAction<BoardTile, Action<int>> OnTileExit;
+    UnityAction<BoardTile> OnTileEntered;
+    UnityAction<BoardTile> OnTileExit;
     UnityAction<BoardTile> onReInit;
 
     public List<string> neighbours = new List<string>();
@@ -75,24 +75,15 @@ public class BoardTile : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        OnTileEntered.Invoke(this, (animation) =>
-        {
-            monster.PlayAnimation(animation);
-        });
+        OnTileEntered.Invoke(this);
     }
     private void OnMouseExit()
     {
-        OnTileExit.Invoke(this, (animation) =>
-        {
-            monster.PlayAnimation(animation);
-        });
+        OnTileExit.Invoke(this);
     }
     private void OnMouseDown()
     {
-        OnTilePressed.Invoke(this, (animation) =>
-        {
-            monster.PlayAnimation(animation);
-        });
+        OnTilePressed.Invoke(this);
     }
     private void OnMouseUp()
     {
@@ -119,5 +110,10 @@ public class BoardTile : MonoBehaviour
     {
         Destroy(monster.gameObject);
         onReInit.Invoke(this);
+    }
+
+    public void PlayAnimation(int animation)
+    {
+        monster.PlayAnimation(animation);
     }
 }

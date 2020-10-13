@@ -15,8 +15,6 @@ public class MainMenu : MonoBehaviour
     private Button _musicButtons;
     [SerializeField]
     private Button _exitButtons;
-    [SerializeField]
-    private Button _infoButtons;
 
     private void Start()
     {
@@ -24,7 +22,6 @@ public class MainMenu : MonoBehaviour
         _soundButtons.onClick.AddListener(OnSoundClicked);
         _musicButtons.onClick.AddListener(OnMusicClicked);
         _exitButtons.onClick.AddListener(OnExitClicked);
-        _infoButtons.onClick.AddListener(OnInfoClicked);
     }
 
     private void OnPlayClicked()
@@ -33,14 +30,18 @@ public class MainMenu : MonoBehaviour
     }
     private void OnSoundClicked()
     {
+        GameObject disabled = _soundButtons.transform.GetChild(0).gameObject;
+        disabled.SetActive(!disabled.activeSelf);
+        SoundManager.instance.MuteSounds();
     }
     private void OnMusicClicked()
     {
+        GameObject disabled = _musicButtons.transform.GetChild(0).gameObject;
+        disabled.SetActive(!disabled.activeSelf);
+        SoundManager.instance.MuteMusic();
     }
     private void OnExitClicked()
     {
-    }
-    private void OnInfoClicked()
-    {
+        Application.Quit();
     }
 }

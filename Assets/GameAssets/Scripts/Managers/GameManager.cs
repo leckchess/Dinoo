@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
         Board.Init(_level);
         Camera.main.backgroundColor = _level.bgColor;
         _uiManager.StartGame(_level.numberOfMoves, _level.bgColor);
+        SoundManager.instance.PlaySound(_level.startSound);
+        SoundManager.instance.PlayMusic(_level.gameBackgroundMusic, true);
     }
     public void UseHummer()
     {
@@ -43,7 +45,7 @@ public class GameManager : MonoBehaviour
 
         _useHummer = true;
     }
-    public void OnTilePressed(BoardTile headtile, Action<int> callback)
+    public void OnTilePressed(BoardTile headtile)
     {
         if (_useHummer)
         {
@@ -55,7 +57,8 @@ public class GameManager : MonoBehaviour
             _linkedMonsters.Clear();
             headtile.PrevTileId = "";
             _linkedMonsters.Add(headtile);
-            callback.Invoke((int)_level.rightSelectedAnimation);
+            headtile.PlayAnimation((int)_level.rightSelectedAnimation);
+            SoundManager.instance.PlaySound(_level.rightSelectedSound);
         }
     }
     public void OnTileReleased()
@@ -81,7 +84,7 @@ public class GameManager : MonoBehaviour
 
         _linkedMonsters.Clear();
     }
-    public void OnTileEntered(BoardTile tile, Action<int> callback)
+    public void OnTileEntered(BoardTile tile)
     {
         if (_linkedMonsters.Count == 0)
             return;
@@ -90,8 +93,8 @@ public class GameManager : MonoBehaviour
         {
             if (tile.NextTileId == _linkedMonsters[_linkedMonsters.Count - 1].id && _linkedMonsters[_linkedMonsters.Count - 1].id == _prevTileId)
             {
+                _linkedMonsters[_linkedMonsters.Count - 1].PlayAnimation((int)_level.idleAnimation);
                 _linkedMonsters.Remove(_linkedMonsters[_linkedMonsters.Count - 1]);
-                callback.Invoke((int)_level.idleAnimation);
             }
             return;
         }
@@ -101,22 +104,20 @@ public class GameManager : MonoBehaviour
             _linkedMonsters[_linkedMonsters.Count - 1].NextTileId = tile.id;
             tile.PrevTileId = _linkedMonsters[_linkedMonsters.Count - 1].id;
             _linkedMonsters.Add(tile);
-            callback.Invoke((int)_level.rightSelectedAnimation);
+            tile.PlayAnimation((int)_level.rightSelectedAnimation);
+            SoundManager.instance.PlaySound(_level.rightSelectedSound);
         }
         else
         {
-            callback.Invoke((int)_level.wrongSelectedAnimation);
+            tile.PlayAnimation((int)_level.wrongSelectedAnimation);
+            SoundManager.instance.PlaySound(_level.wrongSelectedSound);
         }
     }
-    public void OnTileExit(BoardTile tile, Action<int> callback)
+    public void OnTileExit(BoardTile tile)
     {
         if (_linkedMonsters.Count == 0)
             return;
 
         _prevTileId = tile.id;
-
-        if (!_linkedMonsters.Contains(tile))
-            callback.Invoke((int)_level.idleAnimation);
-
     }
 }

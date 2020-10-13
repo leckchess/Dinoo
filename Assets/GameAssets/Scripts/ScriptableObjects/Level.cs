@@ -24,6 +24,17 @@ public class Level : ScriptableObject
     public Animations losAnimation = Animations.Sick;
     [Header("gameplay")]
     public int numberOfMoves;
+    [Header("music")]
+    public AudioClip gameBackgroundMusic;
+    [Header("sounds")]
+    public AudioClip startSound;
+    public AudioClip rightSelectedSound;
+    public AudioClip wrongSelectedSound;
+    public AudioClip exploadSound;
+    public AudioClip winSound;
+    public AudioClip loseSound;
+
+
     public void AddMonster(GameObject monster)
     {
         _monsters.Add(monster);

@@ -33,3 +33,10 @@ MonoBehaviour:
   winAnimation: 2
   losAnimation: 13
   numberOfMoves: 50
+  gameBackgroundMusic: {fileID: 8300000, guid: b11197a368eccc54489cb3154da2c7cd, type: 3}
+  startSound: {fileID: 0}
+  rightSelectedSound: {fileID: 0}
+  wrongSelectedSound: {fileID: 0}
+  exploadSound: {fileID: 0}
+  winSound: {fileID: 0}
+  loseSound: {fileID: 0}
