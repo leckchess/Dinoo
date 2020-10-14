@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 987fca8b68a5b104696f4c8171827675, type: 3}
-  m_Name: Level1
+  m_Name: Level2
   m_EditorClassIdentifier: 
-  bgColor: {r: 0.105682805, g: 0.0076094554, b: 0.5377358, a: 0}
+  bgColor: {r: 0.030704875, g: 0.4339623, b: 0.20753284, a: 0}
   tileScore: 10
-  tileStars: 1
   width: 10
   height: 10
   columnsNumber: 10
@@ -53,8 +52,7 @@ MonoBehaviour:
   exploadAnimation: 8
   winAnimation: 2
   losAnimation: 13
-  numberOfMoves: 10
-  targetStars: 20
+  numberOfMoves: 50
   gameBackgroundMusic: {fileID: 0}
   startSound: {fileID: 0}
   rightSelectedSound: {fileID: 0}

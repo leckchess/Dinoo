@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987fca8b68a5b104696f4c8171827675, type: 3}
   m_Name: Level0
   m_EditorClassIdentifier: 
-  bgColor: {r: 0, g: 0, b: 0, a: 1}
+  bgColor: {r: 0.9490197, g: 0.80392164, b: 0.54509807, a: 1}
   tileScore: 10
+  tileStars: 5
   width: 10
   height: 10
   columnsNumber: 10
@@ -32,7 +33,8 @@ MonoBehaviour:
   exploadAnimation: 8
   winAnimation: 2
   losAnimation: 13
-  numberOfMoves: 50
+  numberOfMoves: 3
+  targetStars: 10
   gameBackgroundMusic: {fileID: 8300000, guid: b11197a368eccc54489cb3154da2c7cd, type: 3}
   startSound: {fileID: 0}
   rightSelectedSound: {fileID: 0}

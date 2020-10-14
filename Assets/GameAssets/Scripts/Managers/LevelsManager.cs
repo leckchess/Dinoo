@@ -23,6 +23,10 @@ public class LevelsManager : MonoBehaviour
     public void LoadLevels(UnityAction callback)
     {
         levels = Resources.LoadAll<Level>("Levels");
+        for (int i = 0; i < levels.Length; i++)
+        {
+            levels[i].ID = i;
+        }
         callback.Invoke();
     }
 }

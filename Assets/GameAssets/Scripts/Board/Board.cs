@@ -89,9 +89,9 @@ public class Board : MonoBehaviour
     {
         if (!_showhint)
             yield break;
-        _hintTile.monster.transform.DOScale(new Vector3(2f, 2f, 2f), 1);
+        _hintTile?.monster.transform.DOScale(new Vector3(2f, 2f, 2f), 1);
         yield return new WaitForSeconds(0.2f);
-        _hintTile.monster.transform.DOScale(Vector3.one, 1);
+        _hintTile?.monster.transform.DOScale(Vector3.one, 1);
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(ShowHint());
     }

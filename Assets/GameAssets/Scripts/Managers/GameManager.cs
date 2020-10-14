@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     private string _prevTileId = "";
     private int _coins;
+    private int _stars;
     private UIManager _uiManager;
     private List<BoardTile> _linkedMonsters = new List<BoardTile>();
     private bool _useHummer;
@@ -76,7 +77,9 @@ public class GameManager : MonoBehaviour
                 tile.monster.PlayAnimation((int)_level.exploadAnimation);
                 tile.ReInitTile();
                 _coins += _level.tileScore;
+                _stars += _level.tileStars;
                 _uiManager.Score = _coins;
+                _uiManager.Stars = _stars + "/" + _level.targetStars;
             }
             else
                 tile.monster.PlayAnimation((int)_level.idleAnimation);

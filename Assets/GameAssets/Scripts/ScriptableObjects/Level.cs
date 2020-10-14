@@ -4,9 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Level", menuName = "Dino/Level")]
 public class Level : ScriptableObject
 {
+    public int ID { get; set; }
     [Header("level")]
     public Color bgColor;
     public int tileScore;
+    public int tileStars;
     [Header("board")]
     public int width;
     public int height;
@@ -24,6 +26,7 @@ public class Level : ScriptableObject
     public Animations losAnimation = Animations.Sick;
     [Header("gameplay")]
     public int numberOfMoves;
+    public int targetStars;
     [Header("music")]
     public AudioClip gameBackgroundMusic;
     [Header("sounds")]
