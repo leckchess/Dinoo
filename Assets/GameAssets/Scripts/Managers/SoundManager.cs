@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
@@ -49,6 +50,15 @@ public class SoundManager : MonoBehaviour
     }
     public void PlaySound(AudioSource source, AudioClip sound)
     {
+        source.PlayOneShot(sound);
+    }
+    public void PlayDelaiedSound(AudioSource source, AudioClip sound, float time)
+    {
+        StartCoroutine(PlaySoundDelay(source, sound, time));
+    }
+    private IEnumerator PlaySoundDelay(AudioSource source, AudioClip sound, float time)
+    {
+        yield return new WaitForSeconds(time);
         source.PlayOneShot(sound);
     }
 }
