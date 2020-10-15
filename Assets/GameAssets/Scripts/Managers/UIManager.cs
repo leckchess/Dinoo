@@ -87,17 +87,17 @@ public class UIManager : MonoBehaviour
     {
         // invoke event for the game manager to act when game over
         onGameOver.Invoke();
-        
+
         gameoverScreen.DOFade(1, 1);
         gameoverScreen.blocksRaycasts = true;
         gameoverScreen.interactable = true;
 
         _gameoverCoinsText.text = _ingameCoinsText.text;
         _gameoverStarsText.text = _ingameStarsText.text;
-        
+
         // to know how many stars from 3 the player achieved
         string[] stars = _ingameStarsText.text.Split('/');
-        int starsnumber = Mathf.Clamp((int.Parse(stars[0]) / int.Parse(stars[1])), 0, 3);
+        int starsnumber = Mathf.Clamp((int.Parse(stars[0]) / int.Parse(stars[1])) * 3, 1, 3);
 
         for (int i = 0; i < starsnumber; i++)
             _stars.transform.GetChild(i).DOScale(Vector3.one, 1);

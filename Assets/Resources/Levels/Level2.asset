@@ -38,7 +38,7 @@ MonoBehaviour:
   exploadAnimation: 8
   winAnimation: 2
   numberOfMoves: 30
-  targetStars: 40
+  targetStars: 100
   gameBackgroundMusic: {fileID: 8300000, guid: b11197a368eccc54489cb3154da2c7cd, type: 3}
   startSound: {fileID: 8300000, guid: a4cabd33cd0d2b44880ca419427599ed, type: 3}
   rightSelectedSound: {fileID: 8300000, guid: fb27a18a09a67e44ea1f71c4e5401977, type: 3}
