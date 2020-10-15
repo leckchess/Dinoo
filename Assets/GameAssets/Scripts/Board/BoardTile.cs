@@ -1,7 +1,5 @@
 ﻿using DG.Tweening;
-using System;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -103,6 +101,7 @@ public class BoardTile : MonoBehaviour
     }
     private void GetNeighbours()
     {
+        // neigbours from row -1 to row +1 and col-1 to col +1
         neighbours.Clear();
         for (int i = Row - 1; i <= Row + 1; i++)
             for (int j = Column - 1; j <= Column + 1; j++)
@@ -118,9 +117,11 @@ public class BoardTile : MonoBehaviour
     {
         return neighbours.Contains(id);
     }
-    public void ReInitTile()
+    public void Expload(AudioClip exploadSound)
     {
+        // destroy the monster and rechange position and get new monster
         Destroy(monster.gameObject);
+        SoundManager.instance.PlaySound(_audioSource, exploadSound);
         onReInit.Invoke(this);
     }
 

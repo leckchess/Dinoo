@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LevelItem : MonoBehaviour
+public class LevelUIItem : MonoBehaviour
 {
     [SerializeField]
     private TMP_Text _levelNumber;
@@ -17,6 +17,7 @@ public class LevelItem : MonoBehaviour
     }
     private void OnLevelClick()
     {
+        // gives the level to level manager for game manager when the game starts
         LevelsManager.instance.CurrentLevel = _level;
         SceneManager.LoadScene(2);
     }

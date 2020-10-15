@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Creats Levels Items Based on Created Levels in Resources
+/// </summary>
 public class LevelsMenu : MonoBehaviour
 {
     [SerializeField]
@@ -19,7 +21,8 @@ public class LevelsMenu : MonoBehaviour
             {
                 GameObject levelobj = Instantiate(_level);
                 levelobj.transform.SetParent(_levelsParent);
-                levelobj.GetComponent<LevelItem>().Init(level);
+                levelobj.transform.localScale = Vector3.one;
+                levelobj.GetComponent<LevelUIItem>().Init(level);
             }
         });
     }

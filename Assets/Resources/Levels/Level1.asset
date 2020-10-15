@@ -17,8 +17,8 @@ MonoBehaviour:
   tileStars: 2
   width: 10
   height: 10
-  columnsNumber: 10
-  rowsNumber: 10
+  columnsNumber: 5
+  rowsNumber: 5
   offset: {x: 2, y: 0}
   monsters:
   - {fileID: 1271500296056796, guid: 600c0a3ade4238148a2721d7899453e0, type: 3}
@@ -40,6 +40,6 @@ MonoBehaviour:
   gameBackgroundMusic: {fileID: 8300000, guid: b11197a368eccc54489cb3154da2c7cd, type: 3}
   startSound: {fileID: 8300000, guid: a4cabd33cd0d2b44880ca419427599ed, type: 3}
   rightSelectedSound: {fileID: 8300000, guid: fb27a18a09a67e44ea1f71c4e5401977, type: 3}
-  wrongSelectedSound: {fileID: 8300000, guid: 199f971a649b16a48b38a8312af3a77c, type: 3}
-  exploadSound: {fileID: 0}
-  winSound: {fileID: 0}
+  wrongSelectedSound: {fileID: 8300000, guid: cf8d237ecd0e85e4ea3fce724b4b0b61, type: 3}
+  exploadSound: {fileID: 8300000, guid: 199f971a649b16a48b38a8312af3a77c, type: 3}
+  winSound: {fileID: 8300000, guid: 201657f8347e8854c98a699b76260cb5, type: 3}

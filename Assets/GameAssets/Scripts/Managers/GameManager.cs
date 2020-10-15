@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -36,6 +34,7 @@ public class GameManager : MonoBehaviour
         Board.Init(_level);
         Camera.main.backgroundColor = _level.bgColor;
         _uiManager.StartGame(_level.numberOfMoves, _level.bgColor);
+        _uiManager.onGameOver.AddListener(OnGameOver);
         SoundManager.instance.PlayMusic(_level.gameBackgroundMusic, true);
     }
     public void UseHummer()
@@ -49,7 +48,10 @@ public class GameManager : MonoBehaviour
     {
         if (_useHummer)
         {
-            headtile.ReInitTile();
+            // when play hummer as if we reallocated 1 tile
+            Board.numberOfReallocatingTiles = 1;
+            headtile.monster.PlayAnimation((int)_level.exploadAnimation);
+            headtile.Expload(_level.exploadSound);
             _useHummer = false;
         }
         else
@@ -68,13 +70,14 @@ public class GameManager : MonoBehaviour
         if (_linkedMonsters.Count >= 3)
             _uiManager.OnMove();
 
+        // to know how many tiles reallocated (to know when all reallocation finished)
         Board.numberOfReallocatingTiles = _linkedMonsters.Count;
         foreach (BoardTile tile in _linkedMonsters)
         {
             if (_linkedMonsters.Count >= 3)
             {
                 tile.monster.PlayAnimation((int)_level.exploadAnimation);
-                tile.ReInitTile();
+                tile.Expload(_level.exploadSound);
                 _coins += _level.tileScore;
                 _stars += _level.tileStars;
                 _uiManager.Score = _coins;
@@ -93,6 +96,7 @@ public class GameManager : MonoBehaviour
 
         if (_linkedMonsters.Contains(tile))
         {
+            // when going back from tile in the link to its previous tile in the link (we should remove it)
             if (tile.NextTileId == _linkedMonsters[_linkedMonsters.Count - 1].id && _linkedMonsters[_linkedMonsters.Count - 1].id == _prevTileId)
             {
                 _linkedMonsters[_linkedMonsters.Count - 1].PlayAnimation((int)_level.idleAnimation);
@@ -101,6 +105,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // if the entered tile id neighbour to the previous tile in head and has the same color (we should add it)
         if (tile.TileColor == _linkedMonsters[_linkedMonsters.Count - 1].TileColor && _linkedMonsters[_linkedMonsters.Count - 1].IsNeighbour(tile.id))
         {
             _linkedMonsters[_linkedMonsters.Count - 1].NextTileId = tile.id;
@@ -120,9 +125,14 @@ public class GameManager : MonoBehaviour
         if (_linkedMonsters.Count == 0)
             return;
 
+        // keep track of the previous tile for the unlinking check
         _prevTileId = tile.id;
 
         if (!_linkedMonsters.Contains(tile))
             tile.monster.PlayAnimation((int)_level.idleAnimation);
+    }
+    private void OnGameOver()
+    {
+        SoundManager.instance.PlayMusic(_level.winSound,true);
     }
 }
