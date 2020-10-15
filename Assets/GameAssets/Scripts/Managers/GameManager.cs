@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
         Board.Init(_level);
         Camera.main.backgroundColor = _level.bgColor;
         _uiManager.StartGame(_level.numberOfMoves, _level.bgColor);
-        SoundManager.instance.PlaySound(_level.startSound);
         SoundManager.instance.PlayMusic(_level.gameBackgroundMusic, true);
     }
     public void UseHummer()
@@ -122,5 +121,8 @@ public class GameManager : MonoBehaviour
             return;
 
         _prevTileId = tile.id;
+
+        if (!_linkedMonsters.Contains(tile))
+            tile.monster.PlayAnimation((int)_level.idleAnimation);
     }
 }

@@ -108,7 +108,7 @@ public class Board : MonoBehaviour
                 BoardTile tile = Instantiate(_tilePrefab, Random.insideUnitSphere * 50, Quaternion.identity).GetComponent<BoardTile>();
                 tile.SetTransform(transform, _tilesize, tileoffset);
                 string id = i.ToString() + j.ToString();
-                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation);
+                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation,_level.startSound);
                 _tiles.Add(id, tile);
                 tileoffset.x += deltax;
             }

@@ -12,33 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987fca8b68a5b104696f4c8171827675, type: 3}
   m_Name: Level0
   m_EditorClassIdentifier: 
-  bgColor: {r: 0.9490197, g: 0.80392164, b: 0.54509807, a: 1}
+  bgColor: {r: 0.9716981, g: 0.90815604, b: 0.59126914, a: 1}
   tileScore: 10
-  tileStars: 5
+  tileStars: 1
   width: 10
   height: 10
   columnsNumber: 10
   rowsNumber: 10
   offset: {x: 2, y: 0}
-  _monsters:
-  - {fileID: 1983060213673536, guid: 31e367aa5e1f44e41bc7dd0ff6f380b9, type: 3}
-  - {fileID: 1172230838857504, guid: e39c6d35d7a2c054c8047f8e46f1f59f, type: 3}
+  monsters:
   - {fileID: 1460914921332520, guid: 8de005e42069d4f489c28fb069419fb2, type: 3}
-  - {fileID: 1669820002915910, guid: 09981d2ff83cd324eb1444466d2e8781, type: 3}
-  - {fileID: 1538010778625564, guid: 181fcd7155ce1d440be8ed42f437b930, type: 3}
+  - {fileID: 1167774603125820, guid: f031a54b9ca132b42a731ebf7c9074f5, type: 3}
+  - {fileID: 1854182892548538, guid: ad27bd6902569ef4ea1de92257da735f, type: 3}
+  - {fileID: 1258230557124220, guid: ffa0c5a94f223a443a4700dec0f6788a, type: 3}
+  - {fileID: 1599571797810298, guid: ed95ae86323dbfd47a4370132efe5645, type: 3}
   idleAnimation: 1
   startAnimation: 3
   rightSelectedAnimation: 11
   wrongSelectedAnimation: 12
   exploadAnimation: 8
   winAnimation: 2
-  losAnimation: 13
-  numberOfMoves: 3
-  targetStars: 10
+  numberOfMoves: 20
+  targetStars: 30
   gameBackgroundMusic: {fileID: 8300000, guid: b11197a368eccc54489cb3154da2c7cd, type: 3}
-  startSound: {fileID: 0}
-  rightSelectedSound: {fileID: 0}
-  wrongSelectedSound: {fileID: 0}
+  startSound: {fileID: 8300000, guid: a4cabd33cd0d2b44880ca419427599ed, type: 3}
+  rightSelectedSound: {fileID: 8300000, guid: fb27a18a09a67e44ea1f71c4e5401977, type: 3}
+  wrongSelectedSound: {fileID: 8300000, guid: 199f971a649b16a48b38a8312af3a77c, type: 3}
   exploadSound: {fileID: 0}
   winSound: {fileID: 0}
-  loseSound: {fileID: 0}

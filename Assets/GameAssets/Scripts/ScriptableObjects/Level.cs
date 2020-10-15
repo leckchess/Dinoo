@@ -16,14 +16,13 @@ public class Level : ScriptableObject
     public int rowsNumber;
     public Vector2 offset;
     [Header("monsters")]
-    public List<GameObject> _monsters = new List<GameObject>();
+    public List<GameObject> monsters = new List<GameObject>();
     public Animations idleAnimation = Animations.Idle;
     public Animations startAnimation = Animations.Hello;
     public Animations rightSelectedAnimation = Animations.Yes;
     public Animations wrongSelectedAnimation = Animations.No;
     public Animations exploadAnimation = Animations.DieFront;
     public Animations winAnimation = Animations.Happy;
-    public Animations losAnimation = Animations.Sick;
     [Header("gameplay")]
     public int numberOfMoves;
     public int targetStars;
@@ -35,20 +34,18 @@ public class Level : ScriptableObject
     public AudioClip wrongSelectedSound;
     public AudioClip exploadSound;
     public AudioClip winSound;
-    public AudioClip loseSound;
-
 
     public void AddMonster(GameObject monster)
     {
-        _monsters.Add(monster);
+        monsters.Add(monster);
     }
     public void RemoveMonster(GameObject monster)
     {
-        _monsters.Remove(monster);
+        monsters.Remove(monster);
     }
     public GameObject GetRandomMonster()
     {
-        int randomIndex = Random.Range(0, _monsters.Count);
-        return Instantiate(_monsters[randomIndex]);
+        int randomIndex = Random.Range(0, monsters.Count);
+        return Instantiate(monsters[randomIndex]);
     }
 }

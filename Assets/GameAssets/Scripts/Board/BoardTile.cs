@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,25 +10,36 @@ public class BoardTile : MonoBehaviour
     public string id { get; private set; }
     public int Column { get { return int.Parse(id[1].ToString()); } private set { } }
     public int Row { get { return int.Parse(id[0].ToString()); } private set { } }
-    public Monster monster;
-    public bool IsChicked { get; set; }
-    UnityAction<BoardTile> OnTilePressed;
-    UnityEvent OnTileReleased = new UnityEvent();
-    UnityAction<BoardTile> OnTileEntered;
-    UnityAction<BoardTile> OnTileExit;
-    UnityAction<BoardTile> onReInit;
-
-    public List<string> neighbours = new List<string>();
     public Color TileColor { get { return monster.color; } }
-
     public string PrevTileId { get; internal set; }
     public string NextTileId { get; internal set; }
+
+    public Monster monster;
+    public List<string> neighbours = new List<string>();
+
+    private UnityAction<BoardTile> OnTilePressed;
+    private UnityEvent OnTileReleased = new UnityEvent();
+    private UnityAction<BoardTile> OnTileEntered;
+    private UnityAction<BoardTile> OnTileExit;
+    private UnityAction<BoardTile> onReInit;
+
+
+    private AudioSource _audioSource;
 
     private void Start()
     {
         ListenToEvents();
     }
-
+    internal void Init(GameObject tilemonster, string tileid, int idleanimation, AudioClip startsound)
+    {
+        id = name = tileid;
+        monster = tilemonster.GetComponent<Monster>();
+        monster.SetTransform(transform, Vector3.zero, Vector3.one);
+        monster.PlayAnimation(idleanimation);
+        GameManager.instance.Board.onGenerationDone?.AddListener(GetNeighbours);
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        SoundManager.instance.PlaySound(_audioSource, startsound);
+    }
     internal void Init(GameObject tilemonster, string tileid, int idleanimation)
     {
         id = name = tileid;
