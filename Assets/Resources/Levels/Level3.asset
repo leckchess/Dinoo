@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987fca8b68a5b104696f4c8171827675, type: 3}
+  m_Name: Level3
+  m_EditorClassIdentifier: 
+  bgColor: {r: 0, g: 0, b: 0, a: 0}
+  tileScore: 10
+  tileStars: 1
+  width: 10
+  height: 10
+  columnsNumber: 20
+  rowsNumber: 20
+  offset: {x: 0, y: 0}
+  monsters:
+  - {fileID: 1271500296056796, guid: 600c0a3ade4238148a2721d7899453e0, type: 3}
+  - {fileID: 1301625778776442, guid: 605d1d0ed0001b94eb47a24d8c8a7350, type: 3}
+  - {fileID: 1543725049702182, guid: f3692b4a0bc93de41b6ff534ead64ebb, type: 3}
+  - {fileID: 1886599277484194, guid: 34bcc0bcdcdc43448ba6fea94d8799d4, type: 3}
+  - {fileID: 1599592598484496, guid: 6ad9fec9b42a68142a305ba67988885e, type: 3}
+  idleAnimation: 1
+  startAnimation: 3
+  rightSelectedAnimation: 11
+  wrongSelectedAnimation: 12
+  exploadAnimation: 8
+  winAnimation: 2
+  numberOfMoves: 20
+  targetStars: 200
+  gameBackgroundMusic: {fileID: 8300000, guid: b11197a368eccc54489cb3154da2c7cd, type: 3}
+  startSound: {fileID: 8300000, guid: a4cabd33cd0d2b44880ca419427599ed, type: 3}
+  rightSelectedSound: {fileID: 8300000, guid: fb27a18a09a67e44ea1f71c4e5401977, type: 3}
+  wrongSelectedSound: {fileID: 8300000, guid: cf8d237ecd0e85e4ea3fce724b4b0b61, type: 3}
+  exploadSound: {fileID: 8300000, guid: 199f971a649b16a48b38a8312af3a77c, type: 3}
+  winSound: {fileID: 8300000, guid: 201657f8347e8854c98a699b76260cb5, type: 3}

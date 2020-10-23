@@ -6,8 +6,24 @@ using UnityEngine.Events;
 public class BoardTile : MonoBehaviour
 {
     public string id { get; private set; }
-    public int Column { get { return int.Parse(id[1].ToString()); } private set { } }
-    public int Row { get { return int.Parse(id[0].ToString()); } private set { } }
+    public int Column
+    {
+        get
+        {
+            string[] splittedid = id.Split('-');
+            return int.Parse(splittedid[1].ToString());
+        }
+        private set { }
+    }
+    public int Row
+    {
+        get
+        {
+            string[] splittedid = id.Split('-');
+            return int.Parse(splittedid[0].ToString());
+        }
+        private set { }
+    }
     public Color TileColor { get { return monster.color; } }
     public string PrevTileId { get; internal set; }
     public string NextTileId { get; internal set; }
@@ -85,19 +101,19 @@ public class BoardTile : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        OnTileEntered.Invoke(this);
+        OnTileEntered?.Invoke(this);
     }
     private void OnMouseExit()
     {
-        OnTileExit.Invoke(this);
+        OnTileExit?.Invoke(this);
     }
     private void OnMouseDown()
     {
-        OnTilePressed.Invoke(this);
+        OnTilePressed?.Invoke(this);
     }
     private void OnMouseUp()
     {
-        OnTileReleased.Invoke();
+        OnTileReleased?.Invoke();
     }
     private void GetNeighbours()
     {

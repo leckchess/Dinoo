@@ -46,7 +46,7 @@ public class Board : MonoBehaviour
             return null;
 
 
-        return _tiles[row.ToString() + col.ToString()].id;
+        return _tiles[row.ToString() + "-" + col.ToString()].id;
     }
     // when destroy tile to reallocate  (we reinit dont destroy)
     public void OnTileReinit(BoardTile tile)
@@ -61,13 +61,13 @@ public class Board : MonoBehaviour
             {
                 row = _level.rowsNumber - 1;
                 t.transform.position = Random.insideUnitSphere * 50;
-                t.Init(_level.GetRandomMonster(), row.ToString() + t.Column.ToString(), (int)_level.idleAnimation);
+                t.Init(_level.GetRandomMonster(), row.ToString() + "-" + t.Column.ToString(), (int)_level.idleAnimation);
                 _tiles[t.id] = t;
             }
             else
             {
                 row = t.Row - 1;
-                t.Init(row.ToString() + t.Column.ToString(), (int)_level.idleAnimation);
+                t.Init(row.ToString() + "-" + t.Column.ToString(), (int)_level.idleAnimation);
                 _tiles[t.id] = t;
             }
 
@@ -81,7 +81,7 @@ public class Board : MonoBehaviour
         if (numberOfReallocatingTiles == 0)
         {
             onGenerationDone.Invoke();
-            _searchtile = _tiles["00"];
+            _searchtile = _tiles["0-0"];
             CheckForAvailableMoves(_searchtile, 1);
         }
     }
@@ -113,8 +113,8 @@ public class Board : MonoBehaviour
             {
                 BoardTile tile = Instantiate(_tilePrefab, Random.insideUnitSphere * 50, Quaternion.identity).GetComponent<BoardTile>();
                 tile.SetTransform(transform, _tilesize, tileoffset);
-                string id = i.ToString() + j.ToString();
-                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation,_level.startSound);
+                string id = i.ToString() + "-" + j.ToString();
+                tile.Init(_level.GetRandomMonster(), id, (int)_level.idleAnimation, _level.startSound);
                 _tiles.Add(id, tile);
                 tileoffset.x += deltax;
             }
@@ -124,7 +124,7 @@ public class Board : MonoBehaviour
 
         // for the tiles to calculate neighbours 
         onGenerationDone.Invoke();
-        _searchtile = _tiles["00"];
+        _searchtile = _tiles["0-0"];
         CheckForAvailableMoves(_searchtile, 1);
     }
     private List<BoardTile> GetReallocatingTiles(int row, int col)
@@ -133,7 +133,7 @@ public class Board : MonoBehaviour
         List<BoardTile> reallocatingtiles = new List<BoardTile>();
         for (int i = row; i < _level.rowsNumber; i++)
         {
-            reallocatingtiles.Add(_tiles[i.ToString() + col.ToString()]);
+            reallocatingtiles.Add(_tiles[i.ToString() + "-" + col.ToString()]);
         }
         return reallocatingtiles;
     }
@@ -166,12 +166,12 @@ public class Board : MonoBehaviour
         }
         else if (_searchtile.Column + 2 < _level.columnsNumber)
         {
-            _searchtile = _tiles[_searchtile.Row.ToString() + (_searchtile.Column + 2).ToString()];
+            _searchtile = _tiles[_searchtile.Row.ToString() + "-" + (_searchtile.Column + 2).ToString()];
             return CheckForAvailableMoves(_searchtile, 1);
         }
         else if (_searchtile.Row + 2 < _level.rowsNumber)
         {
-            _searchtile = _tiles[(_searchtile.Row + 2).ToString() + "0"];
+            _searchtile = _tiles[(_searchtile.Row + 2).ToString() + "-0"];
             return CheckForAvailableMoves(_searchtile, 1);
         }
 
@@ -209,7 +209,7 @@ public class Board : MonoBehaviour
 
         // recalculate neighbours and recheck after randomization
         onGenerationDone.Invoke();
-        _searchtile = _tiles["00"];
+        _searchtile = _tiles["0-0"];
         CheckForAvailableMoves(_searchtile, 0);
     }
 }
