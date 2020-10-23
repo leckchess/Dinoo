@@ -52,7 +52,7 @@ public class BoardTile : MonoBehaviour
         monster.PlayAnimation(idleanimation);
         GameManager.instance.Board.onGenerationDone?.AddListener(GetNeighbours);
         _audioSource = gameObject.AddComponent<AudioSource>();
-        SoundManager.instance.PlaySound(_audioSource, startsound);
+        SoundManager.instance.PlayDelaiedSound(_audioSource, startsound,Random.Range(0,0.5f));
     }
     internal void Init(GameObject tilemonster, string tileid, int idleanimation)
     {
